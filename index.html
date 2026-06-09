@@ -50,6 +50,26 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.5);
             text-align: center;
         }
+        .profile-icon {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 20px auto;
+            display: block;
+            border: 4px solid #00cc66;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            transition: rotate 0.6s ease, scale 0.6s ease;
+            animation: floatProfile 3s ease-in-out infinite;
+        }
+        .profile-icon:hover {
+            rotate: 360deg;
+            scale: 1.1;
+        }
+        @keyframes floatProfile {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
         h1 {
             margin-bottom: 10px;
             font-size: 2.5em;
@@ -170,7 +190,7 @@
             animation: popUp 0.3s ease;
         }
         .modal-content img {
-            width: 70%;
+            width: 85%;
             max-width: 250px;
             border-radius: 10px;
             margin: 0 auto 15px auto;
@@ -276,6 +296,7 @@
     </div>
 
     <div class="container">
+        <img src="/DATE/iconwebsite.jpg" alt="Profile Icon" class="profile-icon">
         <h1><span style="color:#00cc66;">KH Tool</span> Downloader</h1>
         <p>ប្រព័ន្ធទាញយកវីដេអូលឿនបំផុត គាំទ្រគុណភាពច្បាស់ (4K/2K) ពីគ្រប់វេបសាយ</p>
         
