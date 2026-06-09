@@ -54,7 +54,7 @@
             margin-bottom: 10px;
             font-size: 2.5em;
         }
-        input {
+        select {
             width: 85%;
             padding: 18px;
             font-size: 18px;
@@ -62,11 +62,51 @@
             border-radius: 12px;
             margin: 25px 0;
             outline: none;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
         }
+        .input-group {
+            position: relative;
+            width: 85%;
+            margin: 25px auto;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 18px 60px 18px 55px;
+            font-size: 18px;
+            border: none;
+            border-radius: 12px;
+            outline: none;
+            box-sizing: border-box;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .input-group i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #764ba2;
+            font-size: 20px;
+        }
+        .paste-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #764ba2;
+            font-size: 22px;
+            cursor: pointer;
+            padding: 5px;
+            transition: 0.3s;
+        }
+        .paste-btn:hover { color: #ff0066; }
         button {
             padding: 16px 50px;
             font-size: 20px;
-            background: #ff0066;
+            background: linear-gradient(45deg, #ff0066, #ff3388);
             border: none;
             border-radius: 12px;
             color: white;
@@ -76,14 +116,13 @@
             animation: pulseBtn 2s infinite;
         }
         button:hover {
-            background: #ff3388;
-            transform: scale(1.05);
-            box-shadow: 0 8px 15px rgba(255,0,102,0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255,0,102,0.4);
             animation-play-state: paused;
         }
         @keyframes pulseBtn {
             0%, 100% { transform: scale(1); box-shadow: 0 0 0 rgba(255, 0, 102, 0); }
-            50% { transform: scale(1.03); box-shadow: 0 10px 20px rgba(255, 0, 102, 0.4); }
+            50% { transform: scale(1.03); box-shadow: 0 8px 15px rgba(255,0,102,0.4); }
         }
         .result {
             margin-top: 30px;
@@ -94,6 +133,81 @@
         }
         .loading {
             color: #ffd700;
+        }
+        /* --- រចនាប័ទ្មសម្រាប់ប៊ូតុង និង Modal ABA --- */
+        .aba-btn {
+            margin-top: 25px;
+            padding: 12px 25px;
+            font-size: 16px;
+            background: linear-gradient(45deg, #005596, #00A5E4); /* ពណ៌របស់ ABA */
+            box-shadow: 0 4px 10px rgba(0, 85, 150, 0.3);
+            border-radius: 30px;
+        }
+        .aba-btn:hover {
+            box-shadow: 0 8px 15px rgba(0, 85, 150, 0.5);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: #fff;
+            color: #333;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 350px;
+            position: relative;
+            animation: popUp 0.3s ease;
+        }
+        .modal-content img {
+            width: 70%;
+            max-width: 250px;
+            border-radius: 10px;
+            margin: 0 auto 15px auto;
+            display: block;
+            border: 2px solid #005596;
+        }
+        .close-btn {
+            position: absolute; top: 10px; right: 15px; font-size: 28px;
+            cursor: pointer; color: #888; transition: 0.3s;
+        }
+        .close-btn:hover { color: #ff0066; }
+        .progress-bar-container {
+            width: 100%;
+            background-color: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            width: 0%;
+            height: 30px;
+            background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.15) 15px, transparent 15px, transparent 30px), linear-gradient(90deg, #00c6ff, #0072ff);
+            background-size: 42px 42px, 100% 100%;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+            font-weight: bold;
+            transition: width 0.4s ease;
+            animation: progressMove 1s linear infinite;
+        }
+        .progress-bar.success {
+            background: linear-gradient(90deg, #11998e, #38ef7d) !important;
+            animation: none !important;
+        }
+        @keyframes progressMove {
+            0% { background-position: 0 0, 0 0; }
+            100% { background-position: -42px 0, 0 0; }
         }
         .platforms {
             display: flex;
@@ -147,16 +261,16 @@
                 font-size: 18px;
             }
             .result img {
-                width: 100%;
+                width: 100%; /* ធ្វើឱ្យរូបភាព Thumbnail ស្អាតលើទូរសព្ទ */
             }
         }
     </style>
 </head>
-<body class="theme-dark">
+<body class="theme-default">
     <!-- ផ្នែកប្តូរពណ៌ Theme -->
     <div class="theme-selector">
-        <div class="theme-btn" style="background: linear-gradient(135deg, #0f2027, #2c5364);" onclick="setTheme('theme-dark')" title="Dark Theme"></div>
         <div class="theme-btn" style="background: linear-gradient(135deg, #667eea, #764ba2);" onclick="setTheme('theme-default')" title="Purple Theme"></div>
+        <div class="theme-btn" style="background: linear-gradient(135deg, #0f2027, #2c5364);" onclick="setTheme('theme-dark')" title="Dark Theme"></div>
         <div class="theme-btn" style="background: linear-gradient(135deg, #00c6ff, #0072ff);" onclick="setTheme('theme-blue')" title="Blue Theme"></div>
         <div class="theme-btn" style="background: linear-gradient(135deg, #ff4e50, #f9d423);" onclick="setTheme('theme-sunset')" title="Sunset Theme"></div>
     </div>
@@ -170,7 +284,15 @@
             <input type="text" id="urlInput" placeholder="Paste link វីដេអូទីនេះ...">
             <button class="paste-btn" onclick="pasteFromClipboard()" title="Paste ទីនេះ"><i class="fa-solid fa-clipboard"></i></button>
         </div>
-        <br>
+        
+        <select id="qualitySelect">
+            <option value="best">គុណភាពច្បាស់បំផុត (Best Available)</option>
+            <option value="2160">4K Ultra HD (2160p)</option>
+            <option value="1440">2K Quad HD (1440p)</option>
+            <option value="1080">Full HD (1080p)</option>
+            <option value="720">HD (720p)</option>
+        </select>
+
         <button onclick="startDownload()">ទាញយកឥឡូវនេះ</button>
 
         <div class="result" id="result"></div>
@@ -184,17 +306,91 @@
             <div class="platform-icon" style="--i: 6;"><i class="fa-brands fa-pinterest" style="color: #E60023; font-size: 20px;"></i><span>Pinterest</span></div>
             <div class="platform-icon" style="--i: 7;"><i class="fa-brands fa-reddit" style="color: #FF4500; font-size: 20px;"></i><span>Reddit</span></div>
         </div>
+
+        <!-- ប៊ូតុង Donate -->
+        <button class="aba-btn" onclick="document.getElementById('donateModal').style.display='flex'">
+            <i class="fa-solid fa-mug-hot"></i> ឧបត្ថម្ភកាហ្វេ (Donate ABA)
+        </button>
     </div>
 
+    <!-- ផ្ទាំង Modal សម្រាប់ ABA -->
+    <div id="donateModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="document.getElementById('donateModal').style.display='none'">&times;</span>
+            <h2 style="margin-top:0; color:#005596;">ABA Bank</h2>
+            <p>អរគុណសម្រាប់ការគាំទ្រ! 🙏</p>
+            <img src="/DATE/abadonate.jpg" alt="ABA QR Code">
+            <div style="font-size: 16px; font-weight: bold; color: #005596;">ឈ្មោះ: BROS NOP</div>
+            <div style="font-size: 16px; font-weight: bold; color: #005596;">KHR: 008 160 272</div>
+            <div style="font-size: 16px; font-weight: bold; color: #005596;">USD: 500 225 239</div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
     <script>
         // មុខងារប្តូរ និងរក្សាទុក Theme
         function setTheme(theme) {
             document.body.className = theme;
-            localStorage.setItem('savedThemeKH', theme);
+            localStorage.setItem('savedTheme', theme);
         }
         // ដំណើរការ Theme ដែលបានរើសពីមុន
-        const savedTheme = localStorage.getItem('savedThemeKH') || 'theme-dark';
+        const savedTheme = localStorage.getItem('savedTheme') || 'theme-default';
         document.body.className = savedTheme;
+
+        // បិទផ្ទាំង Donate នៅពេលចុចខាងក្រៅ
+        window.onclick = function(event) {
+            const modal = document.getElementById('donateModal');
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // --- ផ្នែក Socket.IO ---
+        const socket = io();
+        let socketId = null;
+
+        socket.on('connect', () => {
+            socketId = socket.id;
+        });
+
+        // ស្ដាប់ Event សម្រាប់ Progress
+        socket.on('downloadProgress', (data) => {
+            const progressBar = document.getElementById('progressBar');
+            if (progressBar) {
+                const percentage = Math.round(data.progress);
+                progressBar.style.width = percentage + '%';
+                
+                if (percentage >= 100) {
+                    progressBar.classList.add('success');
+                    progressBar.textContent = 'កំពុងបញ្ចប់...';
+                } else {
+                    progressBar.textContent = percentage + '%';
+                }
+            }
+        });
+
+        // ស្ដាប់ Event ពេលទាញយករួចរាល់
+        socket.on('downloadComplete', (data) => {
+            const resultDiv = document.getElementById('result');
+            if (data.success) {
+                resultDiv.innerHTML = `
+                    <h3>${data.title}</h3>
+                    ${data.thumbnail ? `<img src="${data.thumbnail}" width="320" style="border-radius:12px; margin:15px 0;">` : ''}
+                    <div class="progress-bar-container">
+                        <div class="progress-bar success" style="width: 100%;">100% រួចរាល់</div>
+                    </div>
+                    <br>
+                    <a href="${data.downloadUrl}" download>
+                        <button style="background:#00cc66;">⬇️ ទាញយក Video MP4</button>
+                    </a>
+                `;
+            }
+        });
+
+        // ស្ដាប់ Event ពេលមានបញ្ហា
+        socket.on('downloadError', (data) => {
+            document.getElementById('result').innerHTML = `<p style="color:#ff6666;">${data.error}</p>`;
+        });
 
         async function pasteFromClipboard() {
             try {
@@ -206,7 +402,13 @@
         }
 
         async function startDownload() {
+            if (!socketId) {
+                alert('⚠️ កំពុងព្យាយាមភ្ជាប់ទៅ Server សូមរង់ចាំបន្តិចរួចព្យាយាមម្តងទៀត។');
+                return;
+            }
+
             const url = document.getElementById('urlInput').value.trim();
+            const quality = document.getElementById('qualitySelect').value;
             const resultDiv = document.getElementById('result');
 
             if (!url) {
@@ -214,33 +416,24 @@
                 return;
             }
 
-            resultDiv.innerHTML = '<p class="loading">កំពុងទាញយក... សូមរង់ចាំបន្តិច</p>';
+            // បង្ហាញ Progress Bar ភ្លាមៗ
+            resultDiv.innerHTML = `
+                <p class="loading">កំពុងចាប់ផ្តើមទាញយក...</p>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar">0%</div>
+                </div>
+            `;
 
-            try {
-                const response = await fetch('/download', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ url })
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    resultDiv.innerHTML = `
-                        <h3>${data.title}</h3>
-                        ${data.thumbnail ? `<img src="${data.thumbnail}" width="320" style="border-radius:12px; margin:15px 0;">` : ''}
-                        <br>
-                        <a href="${data.downloadUrl}" download>
-                            <button style="background:#00cc66;">⬇️ ទាញយក Video MP4</button>
-                        </a>
-                    `;
-                document.getElementById('urlInput').value = ''; // លុប Link ចេញពីប្រអប់ដោយស្វ័យប្រវត្តិ
-                } else {
-                    resultDiv.innerHTML = `<p style="color:#ff6666;">${data.error}</p>`;
-                }
-            } catch (err) {
+            // បញ្ជូន Request ទៅ Server
+            fetch('/download', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url, quality, socketId })
+            }).catch(err => {
                 resultDiv.innerHTML = `<p style="color:#ff6666;">មានបញ្ហាក្នុងការទាក់ទង server។ សូមព្យាយាមម្តងទៀត។</p>`;
-            }
+            });
+            
+            document.getElementById('urlInput').value = ''; // លុប Link ចេញពីប្រអប់
         }
     </script>
 </body>
