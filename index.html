@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KH Tool Downloader - ទាញយកវីដេអូ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Khmer&display=swap');
+        
+        body {
+            font-family: 'Khmer', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            color: white;
+        }
+        body.theme-default { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        body.theme-dark { background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); }
+        body.theme-blue { background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%); }
+        body.theme-sunset { background: linear-gradient(135deg, #ff4e50 0%, #f9d423 100%); }
+
+        .theme-selector {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+        .theme-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid rgba(255,255,255,0.8);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            transition: 0.3s;
+        }
+        .theme-btn:hover { transform: scale(1.2); }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-top: 5px solid #00cc66;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        input {
+            width: 85%;
+            padding: 18px;
+            font-size: 18px;
+            border: none;
+            border-radius: 12px;
+            margin: 25px 0;
+            outline: none;
+        }
+        button {
+            padding: 16px 50px;
+            font-size: 20px;
+            background: #ff0066;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.3s, box-shadow 0.3s;
+            animation: pulseBtn 2s infinite;
+        }
+        button:hover {
+            background: #ff3388;
+            transform: scale(1.05);
+            box-shadow: 0 8px 15px rgba(255,0,102,0.4);
+            animation-play-state: paused;
+        }
+        @keyframes pulseBtn {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 rgba(255, 0, 102, 0); }
+            50% { transform: scale(1.03); box-shadow: 0 10px 20px rgba(255, 0, 102, 0.4); }
+        }
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            min-height: 200px;
+        }
+        .loading {
+            color: #ffd700;
+        }
+        .platforms {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .platform-icon {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 18px;
+            border-radius: 25px;
+            font-size: 16px;
+            transition: 0.3s;
+            opacity: 0;
+            animation: popUp 0.5s ease forwards;
+            animation-delay: calc(var(--i) * 0.1s);
+        }
+        .platform-icon:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-3px);
+        }
+        @keyframes popUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        /* Responsive សំរាប់ទូរសព្ទដៃ */
+        @media (max-width: 600px) {
+            .theme-selector {
+                top: 10px;
+                right: 10px;
+                gap: 5px;
+            }
+            .theme-btn {
+                width: 25px;
+                height: 25px;
+            }
+            .container {
+                padding: 25px 15px;
+                margin: 20px 10px;
+            }
+            h1 { font-size: 1.8em; }
+            .input-group { width: 100%; }
+            .input-group input { font-size: 16px; }
+            button {
+                width: 100%;
+                padding: 15px;
+                font-size: 18px;
+            }
+            .result img {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="theme-dark">
+    <!-- ផ្នែកប្តូរពណ៌ Theme -->
+    <div class="theme-selector">
+        <div class="theme-btn" style="background: linear-gradient(135deg, #0f2027, #2c5364);" onclick="setTheme('theme-dark')" title="Dark Theme"></div>
+        <div class="theme-btn" style="background: linear-gradient(135deg, #667eea, #764ba2);" onclick="setTheme('theme-default')" title="Purple Theme"></div>
+        <div class="theme-btn" style="background: linear-gradient(135deg, #00c6ff, #0072ff);" onclick="setTheme('theme-blue')" title="Blue Theme"></div>
+        <div class="theme-btn" style="background: linear-gradient(135deg, #ff4e50, #f9d423);" onclick="setTheme('theme-sunset')" title="Sunset Theme"></div>
+    </div>
+
+    <div class="container">
+        <h1><span style="color:#00cc66;">KH Tool</span> Downloader</h1>
+        <p>ប្រព័ន្ធទាញយកវីដេអូលឿនបំផុត គាំទ្រគុណភាពច្បាស់ (4K/2K) ពីគ្រប់វេបសាយ</p>
+        
+        <div class="input-group">
+            <i class="fa-solid fa-link"></i>
+            <input type="text" id="urlInput" placeholder="Paste link វីដេអូទីនេះ...">
+            <button class="paste-btn" onclick="pasteFromClipboard()" title="Paste ទីនេះ"><i class="fa-solid fa-clipboard"></i></button>
+        </div>
+        <br>
+        <button onclick="startDownload()">ទាញយកឥឡូវនេះ</button>
+
+        <div class="result" id="result"></div>
+
+        <div class="platforms">
+            <div class="platform-icon" style="--i: 1;"><i class="fa-brands fa-youtube" style="color: #ff0000; font-size: 20px;"></i><span>YouTube</span></div>
+            <div class="platform-icon" style="--i: 2;"><i class="fa-brands fa-tiktok" style="color: #ffffff; font-size: 20px;"></i><span>TikTok</span></div>
+            <div class="platform-icon" style="--i: 3;"><i class="fa-brands fa-instagram" style="color: #E1306C; font-size: 20px;"></i><span>Instagram</span></div>
+            <div class="platform-icon" style="--i: 4;"><i class="fa-brands fa-facebook" style="color: #1877F2; font-size: 20px;"></i><span>Facebook</span></div>
+            <div class="platform-icon" style="--i: 5;"><i class="fa-brands fa-x-twitter" style="color: #ffffff; font-size: 20px;"></i><span>Twitter (X)</span></div>
+            <div class="platform-icon" style="--i: 6;"><i class="fa-brands fa-pinterest" style="color: #E60023; font-size: 20px;"></i><span>Pinterest</span></div>
+            <div class="platform-icon" style="--i: 7;"><i class="fa-brands fa-reddit" style="color: #FF4500; font-size: 20px;"></i><span>Reddit</span></div>
+        </div>
+    </div>
+
+    <script>
+        // មុខងារប្តូរ និងរក្សាទុក Theme
+        function setTheme(theme) {
+            document.body.className = theme;
+            localStorage.setItem('savedThemeKH', theme);
+        }
+        // ដំណើរការ Theme ដែលបានរើសពីមុន
+        const savedTheme = localStorage.getItem('savedThemeKH') || 'theme-dark';
+        document.body.className = savedTheme;
+
+        async function pasteFromClipboard() {
+            try {
+                const text = await navigator.clipboard.readText();
+                document.getElementById('urlInput').value = text;
+            } catch (err) {
+                alert('⚠️ មិនអាច Paste បានទេ! សូមអនុញ្ញាត (Allow) Clipboard នៅលើ Browser របស់អ្នក ឬចុច Paste ដោយផ្ទាល់ដៃ។');
+            }
+        }
+
+        async function startDownload() {
+            const url = document.getElementById('urlInput').value.trim();
+            const resultDiv = document.getElementById('result');
+
+            if (!url) {
+                alert('⚠️ សូមបញ្ចូល URL វីដេអូ!');
+                return;
+            }
+
+            resultDiv.innerHTML = '<p class="loading">កំពុងទាញយក... សូមរង់ចាំបន្តិច</p>';
+
+            try {
+                const response = await fetch('/download', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <h3>${data.title}</h3>
+                        ${data.thumbnail ? `<img src="${data.thumbnail}" width="320" style="border-radius:12px; margin:15px 0;">` : ''}
+                        <br>
+                        <a href="${data.downloadUrl}" download>
+                            <button style="background:#00cc66;">⬇️ ទាញយក Video MP4</button>
+                        </a>
+                    `;
+                document.getElementById('urlInput').value = ''; // លុប Link ចេញពីប្រអប់ដោយស្វ័យប្រវត្តិ
+                } else {
+                    resultDiv.innerHTML = `<p style="color:#ff6666;">${data.error}</p>`;
+                }
+            } catch (err) {
+                resultDiv.innerHTML = `<p style="color:#ff6666;">មានបញ្ហាក្នុងការទាក់ទង server។ សូមព្យាយាមម្តងទៀត។</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
